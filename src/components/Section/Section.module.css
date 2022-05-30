@@ -1,0 +1,8 @@
+.section {
+  display: block;
+  width: 500px;
+  font-size: 40px;
+  font-weight: 700;
+
+  /* margin-top: 50px; */
+}
