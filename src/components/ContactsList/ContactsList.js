@@ -1,9 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { contactDelete } from 'redux/actions';
 import s from './ContactsList.module.css';
 import ContactListItem from './ContactsListItem/ContactsListItem';
 
-function ContactList({ options, onDeleteClick }) {
+function ContactList() {
+  const items = useSelector(state => state.default.contacts.items);
+  const filter = useSelector(state => state.default.contacts.filter);
+  const dispatch = useDispatch();
+
+  const options = items.filter(el => el.name.toLowerCase().includes(filter));
+
   if (options.length === 0)
     return <p className={s.emptyList}>No numbers to show</p>;
   return (
@@ -11,10 +18,9 @@ function ContactList({ options, onDeleteClick }) {
       {options.map(({ id, name, number }) => (
         <ContactListItem
           key={id}
-          id={id}
           name={name}
           number={number}
-          onClick={onDeleteClick}
+          onClick={() => dispatch(contactDelete(id))}
         />
       ))}
     </ul>
@@ -22,14 +28,3 @@ function ContactList({ options, onDeleteClick }) {
 }
 
 export default ContactList;
-
-ContactList.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-};

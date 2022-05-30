@@ -1,34 +1,11 @@
-import { useState } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage/useLocalStorage';
+import { useSelector } from 'react-redux';
 import InputForm from './InputForm/InputForm';
 import ContactList from './ContactsList/ContactsList';
 import Section from './Section/Section';
 import Filter from './Filter/Filter';
 
 function App() {
-  const [contacts, setContacts] = useLocalStorage('contacts', []);
-  const [filter, setFilter] = useState('');
-
-  const onInputChange = ev => {
-    const { value } = ev.currentTarget;
-    setFilter(value);
-  };
-
-  const onFormSubmit = data => {
-    if (contacts.find(el => el.name === data.name)) {
-      alert(`${data.name} is already in the list`);
-      return;
-    }
-    setContacts(prev => [...prev, data]);
-  };
-
-  function filtered() {
-    return contacts.filter(el => el.name.toLowerCase().includes(filter));
-  }
-
-  const onDeleteBtn = ev => {
-    setContacts(prev => prev.filter(el => el.id !== ev.target.name));
-  };
+  const contacts = useSelector(state => state.default.contacts.items);
 
   return (
     <div
@@ -43,16 +20,10 @@ function App() {
       }}
     >
       <Section title="Phonebook" />
-      <InputForm onSubmit={onFormSubmit} />
+      <InputForm />
       <Section title="Contacts" />
-      {contacts?.length > 0 && (
-        <Filter onInput={onInputChange} filter={filter} />
-      )}
-      <ContactList
-        options={filtered()}
-        filter={filter.toLowerCase()}
-        onDeleteClick={onDeleteBtn}
-      />
+      {contacts?.length > 0 && <Filter />}
+      <ContactList />
     </div>
   );
 }

@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { contactAdd } from 'redux/actions';
 import uniqid from 'uniqid';
-import PropTypes from 'prop-types';
 import s from './InputForm.module.css';
 
-function InputForm({ onSubmit }) {
+function InputForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
 
   const onInputChange = ev => {
     const { name, value } = ev.currentTarget;
@@ -23,7 +25,7 @@ function InputForm({ onSubmit }) {
 
   const onFormSubmit = ev => {
     ev.preventDefault();
-    onSubmit({ id: uniqid(), name, number });
+    dispatch(contactAdd({ id: uniqid(), name, number }));
     resetForm();
   };
 
@@ -68,7 +70,3 @@ function InputForm({ onSubmit }) {
 }
 
 export default InputForm;
-
-InputForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
