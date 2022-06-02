@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { contactAdd } from 'redux/actions';
 import uniqid from 'uniqid';
 import s from './InputForm.module.css';
@@ -8,6 +8,8 @@ function InputForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.items);
+  console.log(contacts);
 
   const onInputChange = ev => {
     const { name, value } = ev.currentTarget;
@@ -25,6 +27,11 @@ function InputForm() {
 
   const onFormSubmit = ev => {
     ev.preventDefault();
+    if (contacts.find(el => el.name === name)) {
+      alert('This contact already exist');
+      resetForm();
+      return;
+    }
     dispatch(contactAdd({ id: uniqid(), name, number }));
     resetForm();
   };

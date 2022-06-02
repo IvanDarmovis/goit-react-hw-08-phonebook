@@ -5,7 +5,7 @@ import Section from './Section/Section';
 import Filter from './Filter/Filter';
 
 function App() {
-  const contacts = useSelector(state => state.default.contacts.items);
+  const contacts = useSelector(state => state.contacts.items);
 
   return (
     <div

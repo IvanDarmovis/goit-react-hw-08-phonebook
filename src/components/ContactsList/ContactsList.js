@@ -5,8 +5,8 @@ import s from './ContactsList.module.css';
 import ContactListItem from './ContactsListItem/ContactsListItem';
 
 function ContactList() {
-  const items = useSelector(state => state.default.contacts.items);
-  const filter = useSelector(state => state.default.contacts.filter);
+  const items = useSelector(state => state.contacts.items);
+  const filter = useSelector(state => state.contacts.filter);
   const dispatch = useDispatch();
 
   const options = items.filter(el => el.name.toLowerCase().includes(filter));
