@@ -1,25 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import axios from 'axios';
-
-const axiosBaseQuery =
-  ({ baseUrl } = { baseUrl: '' }) =>
-  async ({ url, method, data, params }) => {
-    try {
-      const result = await axios({ url: baseUrl + url, method, data, params });
-      return { data: result.data };
-    } catch (axiosError) {
-      let err = axiosError;
-      return {
-        error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
-        },
-      };
-    }
-  };
+import { axiosBaseQuery } from './axiosQuery';
 
 export const contactsApi = createApi({
-  reducerPath: 'contacts',
+  reducerPath: 'contactsApi',
+  tagTypes: ['Contacts'],
   baseQuery: axiosBaseQuery({
     baseUrl: 'https://629d9611c6ef9335c0a06ff9.mockapi.io',
   }),
@@ -29,23 +13,30 @@ export const contactsApi = createApi({
         url: '/contacts',
         method: 'GET',
       }),
+      providesTags: ['Contacts'],
     }),
 
-    addContact: builder.query({
-      query: body => ({
-        url: `/contacts/:${body.name}`,
+    addContact: builder.mutation({
+      query: bodyData => ({
+        url: '/contacts',
         method: 'POST',
-        body,
+        body: bodyData,
       }),
+      invalidatesTags: ['Contacts'],
     }),
 
-    deleteContact: builder.query({
-      query: name => ({
-        url: `/contacts/:${name}`,
-        method: 'POST',
+    deleteContact: builder.mutation({
+      query: id => ({
+        url: `/contacts/${id}`,
+        method: 'DELETE',
       }),
+      invalidatesTags: ['Contacts'],
     }),
   }),
 });
 
-export const { useGetContactsQuery, useAddContactQuery } = contactsApi;
+export const {
+  useGetContactsQuery,
+  useAddContactMutation,
+  useDeleteContactMutation,
+} = contactsApi;

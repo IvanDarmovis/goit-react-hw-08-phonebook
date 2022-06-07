@@ -1,11 +1,11 @@
-import { useSelector } from 'react-redux';
+import { useGetContactsQuery } from 'redux/api';
 import InputForm from './InputForm/InputForm';
 import ContactList from './ContactsList/ContactsList';
 import Section from './Section/Section';
 import Filter from './Filter/Filter';
 
 function App() {
-  const contacts = useSelector(state => state.contacts.items);
+  const { data } = useGetContactsQuery();
 
   return (
     <div
@@ -22,7 +22,7 @@ function App() {
       <Section title="Phonebook" />
       <InputForm />
       <Section title="Contacts" />
-      {contacts?.length > 0 && <Filter />}
+      {data?.length > 0 && <Filter />}
       <ContactList />
     </div>
   );
