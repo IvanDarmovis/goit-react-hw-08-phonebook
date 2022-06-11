@@ -17,7 +17,7 @@ function ContactList() {
   useEffect(() => {
     if (!isFetching)
       setOption(
-        data.filter(el => el.name.toLowerCase().includes(filter)) ?? []
+        data?.filter(el => el.name.toLowerCase().includes(filter)) ?? []
       );
   }, [data, filter, isFetching]);
 

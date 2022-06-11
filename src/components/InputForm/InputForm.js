@@ -29,7 +29,7 @@ function InputForm() {
       resetForm();
       return;
     }
-    console.log(mutator({ name, phone }));
+    console.log(await mutator({ name, phone }));
     resetForm();
   };
 
