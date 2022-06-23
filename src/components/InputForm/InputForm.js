@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from '../../redux/api';
 import s from './InputForm.module.css';
-import { useAddContactMutation, useGetContactsQuery } from '../../redux/api';
 
 function InputForm() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [mutator] = useAddContactMutation();
-  const { data } = useGetContactsQuery();
+  const data = useSelector(state => state.contacts);
+  const dispatch = useDispatch();
 
   const onInputChange = ev => {
     const { name, value } = ev.currentTarget;
@@ -22,14 +23,15 @@ function InputForm() {
     }
   };
 
-  const onFormSubmit = async ev => {
+  const onFormSubmit = ev => {
     ev.preventDefault();
+
     if (data.find(el => el.name === name)) {
       alert('This contact already exist');
       resetForm();
       return;
     }
-    console.log(await mutator({ name, phone }));
+    dispatch(addContact({ name, phone }));
     resetForm();
   };
 

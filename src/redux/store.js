@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { contactsApi, userApi } from './api';
-import { filterReducer, userReducer } from './reducer';
+import { filterReducer, userReducer, contactsReducer } from './reducer';
 import {
   persistStore,
   persistReducer,
@@ -25,10 +24,7 @@ const persistUserConfig = {
 
 const store = configureStore({
   reducer: {
-    [contactsApi.reducerPath]: persistReducer(
-      persistConfig,
-      contactsApi.reducer
-    ),
+    contacts: persistReducer(persistConfig, contactsReducer),
     user: persistReducer(persistUserConfig, userReducer),
     filter: filterReducer,
   },
@@ -39,8 +35,6 @@ const store = configureStore({
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
       }),
-      contactsApi.middleware,
-      userApi.middleware,
     ];
   },
 });

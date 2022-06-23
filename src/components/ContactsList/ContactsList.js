@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useGetContactsQuery, useDeleteContactMutation } from '../../redux/api';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts, deleteContact } from '../../redux/api';
 import s from './ContactsList.module.css';
 import ContactListItem from './ContactsListItem/ContactsListItem';
 
 function ContactList() {
   const filter = useSelector(state => state.filter);
+  const data = useSelector(state => state.contacts.list);
+  const isFetching = useSelector(state => state.user.isFetching);
   const [options, setOption] = useState([]);
-  const { data, isFetching } = useGetContactsQuery();
-  const [deleteContact] = useDeleteContactMutation();
-
-  async function contactDelete(id) {
-    await deleteContact(id);
-  }
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getContacts());
     if (!isFetching)
       setOption(
         data?.filter(el => el.name.toLowerCase().includes(filter)) ?? []
       );
-  }, [data, filter, isFetching]);
+  }, [data, dispatch, filter, isFetching]);
 
   if (options.length === 0)
     return <p className={s.emptyList}>No numbers to show</p>;
@@ -30,7 +28,7 @@ function ContactList() {
           key={id}
           name={name}
           number={phone}
-          onClick={() => contactDelete(id)}
+          onClick={() => dispatch(deleteContact(id))}
         />
       ))}
     </ul>

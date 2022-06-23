@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/api';
+import { signupUser } from '../../redux/api';
 
-import s from './LoginForm.module.css';
+import s from './RegisterForm.module.css';
 
 export default function LoginForm() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
   const onFormSubmit = e => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    dispatch(signupUser({ name, email, password }));
   };
 
   const onInputChange = e => {
@@ -19,6 +20,8 @@ export default function LoginForm() {
     const { name, value } = e.currentTarget;
 
     switch (name) {
+      case 'name':
+        return setName(value);
       case 'email':
         return setEmail(value);
       case 'password':
@@ -30,6 +33,18 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={onFormSubmit}>
+      <label>
+        Name
+        <input
+          className={s.labelInput}
+          onChange={onInputChange}
+          value={name}
+          type="text"
+          name="name"
+          placeholder="Enter your name"
+          required
+        />
+      </label>
       <label>
         Email
         <input
@@ -54,7 +69,7 @@ export default function LoginForm() {
           required
         />
       </label>
-      <button type="submit">Login</button>
+      <button type="submit">Regiset</button>
     </form>
   );
 }
