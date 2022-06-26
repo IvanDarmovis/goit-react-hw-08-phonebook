@@ -1,43 +1,34 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/api';
+import { addContact, changeContact, deleteContact } from '../../redux/api';
 import s from './InputForm.module.css';
 
-function InputForm() {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const data = useSelector(state => state.contacts);
+function InputForm({ id = '', userName = '', phone = '', onClose }) {
+  const data = useSelector(state => state.root.contacts.list);
+  const [name, setName] = useState(userName);
+  const [number, setNumber] = useState(phone);
   const dispatch = useDispatch();
-
-  const onInputChange = ev => {
-    const { name, value } = ev.currentTarget;
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-      case 'phone':
-        setPhone(value);
-        break;
-      default:
-        return;
-    }
-  };
 
   const onFormSubmit = ev => {
     ev.preventDefault();
 
-    if (data.find(el => el.name === name)) {
-      alert('This contact already exist');
+    if (id === '') {
+      if (data.find(el => el.name === name)) {
+        alert('This contact already exist');
+        resetForm();
+        return;
+      }
+      dispatch(addContact({ name, number }));
       resetForm();
       return;
     }
-    dispatch(addContact({ name, phone }));
-    resetForm();
+    dispatch(changeContact({ name, number, id }));
+    onClose();
   };
 
   const resetForm = () => {
     setName('');
-    setPhone('');
+    setNumber('');
   };
 
   return (
@@ -46,7 +37,7 @@ function InputForm() {
         Name
         <input
           className={s.labelInput}
-          onChange={onInputChange}
+          onChange={ev => setName(ev.currentTarget.value)}
           type="text"
           name="name"
           value={name}
@@ -59,18 +50,31 @@ function InputForm() {
         Number
         <input
           className={s.labelInput}
-          onChange={onInputChange}
+          onChange={ev => setNumber(ev.currentTarget.value)}
           type="tel"
           name="phone"
-          value={phone}
+          value={number}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
         />
       </label>
       <button type="submit" className={s.formBtn}>
-        Add contact
+        {id === '' ? 'Add contact' : 'Save'}
       </button>
+      {id !== '' && (
+        <button
+          className={s.deleteBtn}
+          onClick={() => {
+            dispatch(deleteContact(id));
+            onClose();
+          }}
+          name={id}
+          type="button"
+        >
+          Delete
+        </button>
+      )}
     </form>
   );
 }

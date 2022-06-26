@@ -1,13 +1,19 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser, loginUser } from 'redux/api';
 
 import s from './LoginForm.module.css';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const token = useSelector(state => state.root.user.token);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (token !== '') dispatch(getCurrentUser());
+  }, [dispatch, token]);
 
   const onFormSubmit = e => {
     e.preventDefault();

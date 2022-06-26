@@ -1,37 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getContacts, deleteContact } from '../../redux/api';
+import { getContacts } from '../../redux/api';
+import Modal from 'components/Modal';
+import InputForm from 'components/InputForm/InputForm';
 import s from './ContactsList.module.css';
 import ContactListItem from './ContactsListItem/ContactsListItem';
 
 function ContactList() {
-  const filter = useSelector(state => state.filter);
-  const data = useSelector(state => state.contacts.list);
-  const isFetching = useSelector(state => state.user.isFetching);
+  const filter = useSelector(state => state.root.filter);
+  const data = useSelector(state => state.root.contacts.list);
+  const isContactsFetching = useSelector(
+    state => state.root.contacts.isFetching
+  );
+  const [showModal, setShowModal] = useState(false);
   const [options, setOption] = useState([]);
+  const [user, setUser] = useState({});
   const dispatch = useDispatch();
+  const toogleModal = () => setShowModal(!showModal);
 
   useEffect(() => {
-    dispatch(getContacts());
-    if (!isFetching)
-      setOption(
-        data?.filter(el => el.name.toLowerCase().includes(filter)) ?? []
-      );
-  }, [data, dispatch, filter, isFetching]);
+    if (isContactsFetching) dispatch(getContacts());
+  }, [dispatch, isContactsFetching]);
+
+  useEffect(() => {
+    setOption(data?.filter(el => el.name.toLowerCase().includes(filter)) ?? []);
+  }, [data, filter]);
+
+  const onListItemClick = el => {
+    setUser(el);
+    toogleModal();
+  };
 
   if (options.length === 0)
     return <p className={s.emptyList}>No numbers to show</p>;
   return (
-    <ul className={s.list}>
-      {options?.map(({ id, name, phone }) => (
-        <ContactListItem
-          key={id}
-          name={name}
-          number={phone}
-          onClick={() => dispatch(deleteContact(id))}
-        />
-      ))}
-    </ul>
+    <div>
+      <ul className={s.list}>
+        {options?.map(el => (
+          <ContactListItem
+            key={el.id}
+            name={el.name}
+            number={el.number}
+            onClick={() => onListItemClick(el)}
+          />
+        ))}
+      </ul>
+      {showModal && (
+        <Modal onClose={toogleModal}>
+          <div className={s.modalData}>
+            <InputForm
+              id={user.id}
+              userName={user.name}
+              phone={user.number}
+              onClose={toogleModal}
+            />
+          </div>
+        </Modal>
+      )}
+    </div>
   );
 }
 

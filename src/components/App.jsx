@@ -6,22 +6,12 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import UserMenu from './UserMenu';
 import { OnlyPublicPath, PrivatePath } from './services/redirect';
-import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from '../redux/api';
-import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
 function App() {
-  const dispatch = useDispatch();
-  const data = useSelector(state => state.contacts.list);
-  const isLoggedIn = useSelector(state => state.user.isLogged);
-
-  useEffect(() => {
-    if (isLoggedIn)
-      setTimeout(() => {
-        dispatch(getContacts());
-      }, 0);
-  }, [dispatch, isLoggedIn]);
+  const data = useSelector(state => state.root.contacts.list);
+  const isLoggedIn = useSelector(state => state.root.user.isLogged);
 
   return (
     <div>
@@ -47,8 +37,7 @@ function App() {
                 <Section title="PhoneBook" />
                 <InputForm />
                 <Section title="Contacts" />
-                {data?.length > 0 && <Filter />}
-                <Filter />
+                {data.length > 0 && <Filter />}
                 <ContactList />
               </>
             }

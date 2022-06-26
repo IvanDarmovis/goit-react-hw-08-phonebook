@@ -24,6 +24,7 @@ const userInit = {
 
 const contactsInit = {
   list: [],
+  isFetching: true,
 };
 
 const filterReducer = createReducer('', {
@@ -44,18 +45,21 @@ const userSlice = createSlice({
       state.isFetching = true;
     },
     [signupUser.fulfilled]: (state, action) => {
+      if (!action.payload) return;
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isLogged = true;
       state.isFetching = false;
     },
     [loginUser.fulfilled]: (state, { payload }) => {
+      if (!payload) return;
       state.user = payload.user;
       state.token = payload.token;
       state.isLogged = true;
       state.isFetching = false;
     },
     [getCurrentUser.fulfilled]: (state, { payload }) => {
+      if (!payload) return;
       state.user = payload.user;
       state.isLogged = true;
       state.isFetching = false;
@@ -73,20 +77,19 @@ const contactsSlice = createSlice({
   name: 'contacts',
   initialState: contactsInit,
   extraReducers: {
-    [getContacts.pending]: state => {},
-    [addContact.pending]: state => {},
     [getContacts.fulfilled]: (state, action) => {
       if (!action.payload) return;
       state.list = [...action.payload];
+      state.isFetching = false;
     },
-    [addContact.fulfilled]: (state, action) => {
-      state.list = [...state.list, action.payload];
+    [addContact.fulfilled]: state => {
+      state.isFetching = true;
     },
-    [changeContact.fulfilled]: (state, action) => {
-      return;
+    [changeContact.fulfilled]: state => {
+      state.isFetching = true;
     },
-    [deleteContact.fulfilled]: (state, action) => {
-      return;
+    [deleteContact.fulfilled]: state => {
+      state.isFetching = true;
     },
   },
 });

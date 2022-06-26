@@ -2,13 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './ContactsListItem.module.css';
 
-export default function ContactListItem({ id, name, number, onClick }) {
+export default function ContactListItem({ name, number, onClick }) {
   return (
-    <li className={s.listItem}>
+    <li className={s.listItem} onClick={onClick}>
       {name}: {number}
-      <button className={s.deleteBtn} onClick={onClick} name={id} type="button">
-        Delete
-      </button>
     </li>
   );
 }
