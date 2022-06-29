@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact, changeContact, deleteContact } from '../../redux/api';
-import s from './InputForm.module.css';
+import PropTypes from 'prop-types';
+import { TextField, Box, Button } from '@mui/material';
 
 function InputForm({ id = '', userName = '', phone = '', onClose }) {
   const data = useSelector(state => state.root.contacts.list);
@@ -32,39 +33,59 @@ function InputForm({ id = '', userName = '', phone = '', onClose }) {
   };
 
   return (
-    <form onSubmit={onFormSubmit}>
-      <label className={s.label}>
-        Name
-        <input
-          className={s.labelInput}
-          onChange={ev => setName(ev.currentTarget.value)}
-          type="text"
-          name="name"
-          value={name}
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          required
-        />
-      </label>
-      <label className={s.label}>
-        Number
-        <input
-          className={s.labelInput}
-          onChange={ev => setNumber(ev.currentTarget.value)}
-          type="tel"
-          name="phone"
-          value={number}
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          required
-        />
-      </label>
-      <button type="submit" className={s.formBtn}>
+    <Box
+      onSubmit={onFormSubmit}
+      component={'form'}
+      autocomplete="off"
+      noValidate
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 400,
+        alignItems: 'center',
+        m: '0 auto',
+        '& *': {
+          mt: 1,
+        },
+      }}
+    >
+      <TextField
+        variant="outlined"
+        onChange={ev => setName(ev.currentTarget.value)}
+        type="text"
+        name="name"
+        value={name}
+        placeholder="Enter the name"
+        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+        required
+      />
+
+      <TextField
+        variant="outlined"
+        onChange={ev => setNumber(ev.currentTarget.value)}
+        type="tel"
+        name="phone"
+        value={number}
+        placeholder="Enter the number"
+        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+        required
+      />
+
+      <Button
+        sx={{
+          p: '10px',
+        }}
+        type="submit"
+      >
         {id === '' ? 'Add contact' : 'Save'}
-      </button>
+      </Button>
       {id !== '' && (
-        <button
-          className={s.deleteBtn}
+        <Button
+          sx={{
+            p: '10px',
+          }}
           onClick={() => {
             dispatch(deleteContact(id));
             onClose();
@@ -73,10 +94,17 @@ function InputForm({ id = '', userName = '', phone = '', onClose }) {
           type="button"
         >
           Delete
-        </button>
+        </Button>
       )}
-    </form>
+    </Box>
   );
 }
+
+InputForm.protoType = {
+  id: PropTypes.string,
+  userName: PropTypes.string,
+  phone: PropTypes.string,
+  onClose: PropTypes.func,
+};
 
 export default InputForm;

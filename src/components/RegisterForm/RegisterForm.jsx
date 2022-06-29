@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { signupUser } from '../../redux/api';
-
-import s from './RegisterForm.module.css';
+import { TextField, Box, Button } from '@mui/material';
 
 export default function LoginForm() {
   const [name, setName] = useState('');
@@ -32,44 +31,50 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={onFormSubmit}>
-      <label>
-        Name
-        <input
-          className={s.labelInput}
-          onChange={onInputChange}
-          value={name}
-          type="text"
-          name="name"
-          placeholder="Enter your name"
-          required
-        />
-      </label>
-      <label>
-        Email
-        <input
-          className={s.labelInput}
-          onChange={onInputChange}
-          value={email}
-          type="text"
-          name="email"
-          placeholder="Enter Email"
-          required
-        />
-      </label>
-      <label className={s.label}>
-        Password
-        <input
-          className={s.labelInput}
-          onChange={onInputChange}
-          value={password}
-          type="password"
-          name="password"
-          placeholder="Enter Password"
-          required
-        />
-      </label>
-      <button type="submit">Regiset</button>
-    </form>
+    <Box
+      onSubmit={onFormSubmit}
+      component={'form'}
+      autocomplete="off"
+      noValidate
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 400,
+        alignItems: 'center',
+        m: '0 auto',
+        '& *': {
+          mt: 1,
+        },
+      }}
+    >
+      <TextField
+        variant="outlined"
+        onChange={onInputChange}
+        value={name}
+        type="text"
+        name="name"
+        placeholder="Enter your name"
+        required
+      />
+      <TextField
+        variant="outlined"
+        onChange={onInputChange}
+        value={email}
+        type="text"
+        name="email"
+        placeholder="Enter Email"
+        required
+      />
+      <TextField
+        variant="outlined"
+        onChange={onInputChange}
+        value={password}
+        type="password"
+        name="password"
+        placeholder="Enter Password"
+        required
+      />
+      <Button type="submit">Regiset</Button>
+    </Box>
   );
 }

@@ -8,13 +8,22 @@ import UserMenu from './UserMenu';
 import { OnlyPublicPath, PrivatePath } from './services/redirect';
 import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import { Box } from '@mui/material';
 
 function App() {
   const data = useSelector(state => state.root.contacts.list);
   const isLoggedIn = useSelector(state => state.root.user.isLogged);
 
   return (
-    <div>
+    <Box
+      sx={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
       <UserMenu />
       <Routes>
         <Route
@@ -44,7 +53,7 @@ function App() {
           />
         </Route>
       </Routes>
-    </div>
+    </Box>
   );
 }
 

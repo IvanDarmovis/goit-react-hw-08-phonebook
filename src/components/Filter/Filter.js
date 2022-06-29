@@ -1,23 +1,20 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { filter } from 'redux/reducer';
-import s from './Filter.module.css';
+import { TextField } from '@mui/material';
 
 function Filter() {
   const value = useSelector(state => state.filter);
   const dispatch = useDispatch();
 
   return (
-    <label>
-      Find contacts by name
-      <input
-        className={s.labelInput}
-        onChange={ev => dispatch(filter(ev.target.value))}
-        type="text"
-        name="filter"
-        value={value}
-      />
-    </label>
+    <TextField
+      placeholder="Find"
+      onChange={ev => dispatch(filter(ev.target.value))}
+      type="text"
+      name="filter"
+      value={value}
+    />
   );
 }
 

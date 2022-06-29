@@ -1,12 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import s from './Section.module.css';
+import { Box, Typography } from '@mui/material';
 
 function Section({ title }) {
   return (
-    <div className={s.section}>
-      <p>{title}</p>
-    </div>
+    <Box
+      sx={{
+        m: '0 auto',
+      }}
+    >
+      <Typography
+        variant="h4"
+        component="p"
+        sx={{
+          m: '10px',
+        }}
+      >
+        {title}
+      </Typography>
+    </Box>
   );
 }
 
